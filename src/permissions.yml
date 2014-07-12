@@ -1,0 +1,23 @@
+# Permissions only used if Vault is not installed or
+# if there is no permissions plugin on the server.
+
+# Note: Everything is case-sensitive.
+
+op:
+- fastcraft.admin
+- fastcraft.admin.reload
+- fastcraft.admin.update
+- fastcraft.use
+- fastcraft.toggle
+- fastcraft.toggle.other
+default:
+- fastcraft.use
+- fastcraft.toggle
+
+# Permissions for individual players.
+# Completely overrides op/default permissions.
+users:
+ sampleUser~:
+ - fastcraft.use
+ - fastcraft.toggle
+ - fastcraft.toggle.other

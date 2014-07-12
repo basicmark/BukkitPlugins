@@ -1,0 +1,14 @@
+name: FastCraft
+version: 10
+main: me.bw.fastcraft.FastCraft
+depend: []
+softdepend:
+- Vault
+- Spout
+author: Kepler_
+commands:
+  fastcraft:
+    description: FastCraft commands.
+    usage: /<command>
+    aliases:
+    - fc

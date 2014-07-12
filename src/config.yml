@@ -1,0 +1,23 @@
+autoUpdate:
+  enabled: true
+  checkInterval-Mins: 30
+
+fastCraftDefaultEnabled: true
+
+buttonPrevItem: '262:0'
+buttonNextItem: '262:0'
+buttonHelpItem: '387:0'
+buttonCraftItem: '58:0'
+buttonRefreshItem: '399:0'
+
+disabledRecipes:
+- '358'
+- '401'
+disabledIngredients:
+- '358'
+- '395'
+- '403'
+
+notifyPlayersOnUpdate: []
+
+version-DoNotEdit: 10
