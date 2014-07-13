@@ -1,0 +1,12 @@
+You may use this code to learn and understand how FastCraft works, and learn
+to use its api, solve plugin conflicts, etc.
+
+You may not use the code in your own projects without permission. You may
+freely contact me to request permission to use a portion of the code.
+
+If you have any questions or uncertainties about this license, please contact
+feel free to contact me. Assume all rights reserved for all that was not
+covered in this license.
+
+Contact:
+You may PM Kepler_ on dev.bukkit.org
