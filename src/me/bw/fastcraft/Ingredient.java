@@ -44,7 +44,10 @@ public class Ingredient {
 	public void setAmount(int amount){
 		this.amount = amount;
 	}
-
+	public ItemStack getItemStack(int amount){
+		return new ItemStack(material.getItemType(), amount, material.getData());
+	}
+	
 	public boolean isSimilar(Ingredient i){
 		if (material.getItemType() != i.material.getItemType()) return false;
 		if (material.getData() != i.material.getData() && !(hasDataWildcard() || i.hasDataWildcard())) return false;

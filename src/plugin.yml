@@ -1,5 +1,5 @@
 name: FastCraft
-version: 10
+version: 11
 main: me.bw.fastcraft.FastCraft
 depend: []
 softdepend:

@@ -12,11 +12,13 @@ import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -116,8 +118,10 @@ public class InventoryManager implements Listener {
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)
-	public void onInventoryClick(InventoryClickEvent event){
+	public void onInventoryClick(final InventoryClickEvent event){
+		if (event instanceof CraftItemEvent) return;
 		if (!isInvOpen(event.getWhoClicked()) || event.isCancelled() || event.getResult() == Result.DENY || event.getRawSlot() < 0) return;
+		
 		final Player player = (Player)event.getWhoClicked();
 		FastCraftInv inv = inventories.get(event.getWhoClicked().getName());
 		Inventory topInv = event.getView().getTopInventory();
@@ -152,22 +156,59 @@ public class InventoryManager implements Listener {
 					boolean removeIngredients = false;
 					boolean shiftAdd = false;
 					FastRecipe curRecipe = inv.getCraftableItems().get(inv.getPage() * Settings.craftItemRows * 9 + event.getSlot());
+					
+					final Inventory fakeTopInv = curRecipe.createCraftingInventory(event.getWhoClicked());
+					InventoryView fakeView = new InventoryView(){
+						@Override public Inventory getBottomInventory()
+						{ return event.getView().getBottomInventory(); }
+						@Override public HumanEntity getPlayer()
+						{ return event.getWhoClicked(); }
+						@Override public Inventory getTopInventory()
+						{ return fakeTopInv; }
+						@Override public InventoryType getType()
+						{ return fakeTopInv.getType(); }
+					};
+					
+					CraftItemEvent craftEvent = new CraftItemEvent(
+							curRecipe.getRecipe(),
+							fakeView,
+							SlotType.RESULT,
+							0, //Crafting result slot ID
+							event.getClick(),
+							event.getAction()
+					);
+					
+					ItemStack startItem = craftEvent.getCurrentItem();
+					Bukkit.getServer().getPluginManager().callEvent(craftEvent);
+					
+					boolean isCancelled = craftEvent.isCancelled();
+					boolean resultDeny = craftEvent.getResult() == Result.DENY;
+					
+					if (isCancelled || resultDeny){
+						event.setCancelled(craftEvent.isCancelled());
+						event.setResult(craftEvent.getResult());
+						return;
+					}
+					
+					ItemStack recipeResult = craftEvent.getCurrentItem();
+					craftEvent.setCurrentItem(startItem);
+
 					if (curRecipe.canCraft(inv.getIngredients())){
 						switch (event.getClick()){
 						case LEFT:
 						case RIGHT:
 						case DOUBLE_CLICK:
 							if (event.getCursor().getType() == Material.AIR){
-								player.setItemOnCursor(curRecipe.getResult());
+								player.setItemOnCursor(recipeResult);
 								removeIngredients = true;
-							}else if (event.getCursor().isSimilar(curRecipe.getResult()) && curRecipe.getResult().getAmount() + event.getCursor().getAmount() <= curRecipe.getResult().getMaxStackSize()){
-								event.getCursor().setAmount(event.getCursor().getAmount() + curRecipe.getResult().getAmount());
+							}else if (event.getCursor().isSimilar(recipeResult) && recipeResult.getAmount() + event.getCursor().getAmount() <= recipeResult.getMaxStackSize()){
+								event.getCursor().setAmount(event.getCursor().getAmount() + recipeResult.getAmount());
 								removeIngredients = true;
 							}
 							break;
 						case SHIFT_LEFT:
 						case SHIFT_RIGHT:
-							if (canShiftAddToInv(curRecipe.getResult(), curRecipe.getResult().getAmount(), player.getInventory())){
+							if (canShiftAddToInv(recipeResult, recipeResult.getAmount(), player.getInventory())){
 								removeIngredients = true;
 								shiftAdd = true;
 							}
@@ -175,7 +216,7 @@ public class InventoryManager implements Listener {
 						case CONTROL_DROP:
 						case DROP:
 							removeIngredients = true;
-							event.getView().setItem(InventoryView.OUTSIDE, curRecipe.getResult());
+							event.getView().setItem(InventoryView.OUTSIDE, recipeResult);
 							break;
 						case MIDDLE:
 							if (player.getGameMode() == GameMode.CREATIVE && player.getItemOnCursor().getType() == Material.AIR){
@@ -196,7 +237,7 @@ public class InventoryManager implements Listener {
 							updateInv = true;
 						}
 						if (shiftAdd){
-							ItemStack notAdded = shiftAddToInv(curRecipe.getResult(), curRecipe.getResult().getAmount(), player.getInventory());
+							ItemStack notAdded = shiftAddToInv(recipeResult, recipeResult.getAmount(), player.getInventory());
 							if (notAdded != null){
 								event.getView().setItem(InventoryView.OUTSIDE, notAdded);
 							}
@@ -364,6 +405,7 @@ public class InventoryManager implements Listener {
 		notAdded.setAmount(remaining);
 		return notAdded;
 	}
+	
 	private boolean canShiftAddToInv(ItemStack item, int amount, Inventory inv){
 		ItemStack newItem = new ItemStack(item);
 		Inventory newInv = Bukkit.createInventory(inv.getHolder(), inv.getSize());
@@ -371,7 +413,6 @@ public class InventoryManager implements Listener {
 		return shiftAddToInv(newItem, amount, newInv) == null;
 	}
 }
-
 
 
 

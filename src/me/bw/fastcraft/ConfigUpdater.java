@@ -26,6 +26,7 @@ public class ConfigUpdater {
 		case  7: v7_v8(conf, file); updateLang = true;
 		case  8: v8_v9(conf, file); updateLang = true;
 		case  9: v9_v10(conf, file); updateLang = true;
+		case 10:
 		default://Current Version
 		}
 		conf.set("version-DoNotEdit", FastCraft.version);
