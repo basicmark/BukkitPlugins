@@ -20,4 +20,6 @@ disabledIngredients:
 
 notifyPlayersOnUpdate: []
 
-version-DoNotEdit: 11
+language: EN
+
+version-DoNotEdit: 13

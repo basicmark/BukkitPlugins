@@ -1,0 +1,61 @@
+errNoPerm: '&cVous n''avez pas la permission: %%0'
+errCmdPlayerOnly: '&cVous devez etre un joueur d''utiliser cette commande!'
+errPlayerNotFound: '&cJoueur $4%%0&c introuvable!'
+
+updateNotification: '&aFastCraft a ete mis a jour!'
+
+cmdFc: '/fastcraft'
+outFc:
+  |
+    &3=================== &bFastCraft Help&3 ====================
+    &a/fastcraft toggle [on/off/toggle] [lecteur]
+    &3=====================================================
+cmdFcToggle: '/fastcraft toggle [on/off/toggle] [lecteur]'
+outFcToggleOn: '&aUtilisez maintenant FastCraft pour l''elaboration.'
+outFcToggleOff: '&aN''utilisez plus FastCraft pour façonner.'
+outFcToggleOther: '&aDuis bascule FastCraft pour %%0!'
+outFcToggleOnOther: '&a%%0 est maintenant FastCraft aide pour rediger.'
+outFcToggleOffOther: '&a%%0 n''utilise plus FastCraft pour façonner.'
+    
+cmdFcAdmin: '/fastcraft admin'
+outFcAdmin:
+  |
+    &3================ &bFastCraft Admin Aide&3 ==================
+    &a/fastcraft admin reload
+    &a/fastcraft admin update
+    &3=====================================================
+cmdFcAdminReload: '/fastcraft admin reload'
+outFcAdminReload: '&aReload complet.'
+
+cmdFcAdminUpdate: '/fastcraft admin update'
+outFcAdminUpdate-Checking: '&aVerification des mises a jour...'
+outFcAdminUpdate-ErrFetch: '&cErreur d''obtention des informations de mise a jour!'
+outFcAdminUpdate-None: '&aAucune mise a jour trouve!'
+outFcAdminUpdate-Found: '&aTrouve une mise a jour ! Telechargement...'
+outFcAdminUpdate-DlErr: '&cErreur de telechargement!'
+outFcAdminUpdate-Complete: '&aCorrectement mise a jour telechargee!'
+
+invTitle: 'FastCraft'
+
+buttonPrevName: '&aPage precedente'
+buttonPrevLore: '&3Aller a la page &b%%0/%%1'
+buttonNextName: '&aPage suivante'
+buttonNextLore: '&3Aller a la page &b%%0/%%1'
+buttonHelpName: '&aFastCraft Aide'
+buttonHelpLore:
+  |
+    &3Pour les bateaux un objet avec FastCraft,
+    &3tout ce que vous devez faire est de cliquer
+    &3sur l'objet que vous souhaitez craft. Les
+    &3materiaux necessaires pour faconner le point
+    &3de l'ordre du jour sera automatiquement
+    &3supprime de votre inventaire, et il vous
+    &3sera donne l'objet malveillant. Pour les
+    &3bateaux normalement, cliquez sur l'icone
+    &3workbench sur le fond.
+buttonCraftName: '&aArtisanat'
+buttonCraftLore: '&3Montrer artisanat grille'
+buttonRefreshName: '&aActualiser'
+buttonRefreshLore: '&3Trier les objets'
+
+ingredientsFormat: '&a%%0x %%1'

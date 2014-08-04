@@ -1,5 +1,6 @@
 # Permissions only used if Vault is not installed or
 # if there is no permissions plugin on the server.
+# Vault is recommended.
 
 # Note: Everything is case-sensitive.
 

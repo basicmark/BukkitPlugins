@@ -2,6 +2,9 @@ package me.bw.fastcraft;
 
 import java.util.HashMap;
 
+import me.bw.fastcraft.util.PlayerUtil;
+
+import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -45,62 +48,70 @@ public class InventoryManager implements Listener {
 	}
 	public boolean togglePlayer(String player, boolean value){
 		playerToggle.put(player, value);
-		FastCraft.playerPrefsConfig.set(player + ".fastCraftEnabled", value);
+		PlayerUtil.setPlayerPreference(player, "fastCraftEnabled", value);
 		return value;
 	}
 
 	public void closeInventories(){
 		for (String s : inventories.keySet()){
-			if (Bukkit.getPlayer(s) != null)
-				Bukkit.getPlayer(s).closeInventory();
+			Player p = PlayerUtil.getOnlinePlayer(s);
+			if (p != null) p.closeInventory();
 		}
 	}
 
-	private boolean isInvOpen(HumanEntity player){
-		return inventories.get(player.getName()) != null;
+	private boolean isInvOpen(Player player){
+		return inventories.get(PlayerUtil.getIdentifier(player)) != null;
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)
 	public void onInventoryOpen(InventoryOpenEvent event){
-		if (event.isCancelled()) return;
-		boolean openFastInv = openingFastInv.get(event.getPlayer().getName()) != null;
-		boolean openOtherInv = openingOtherInv.get(event.getPlayer().getName()) != null;
+		if (event.isCancelled() || !(event.getPlayer() instanceof Player)) return;
+		Player player = (Player)event.getPlayer();
+		String id = PlayerUtil.getIdentifier(player);
 
-		if (event.getPlayer() instanceof Player && !openFastInv && !openOtherInv && event.getInventory().getType() == InventoryType.WORKBENCH && getPlayerToggle(event.getPlayer().getName())){
+		boolean openFastInv = openingFastInv.get(id) != null;
+		boolean openOtherInv = openingOtherInv.get(id) != null;
+
+		if (!openFastInv && !openOtherInv && event.getInventory().getType() == InventoryType.WORKBENCH && getPlayerToggle(id)){
 			if (Permissions.playerHas((Player)event.getPlayer(), "fastcraft.use")){
-				openingFastInv.put(event.getPlayer().getName(), true);
+				openingFastInv.put(id, true);
 				FastCraftInv inv = new FastCraftInv();
 				inv.setIngredients(new IngredientList(event.getPlayer().getInventory().getContents()));
 				inv.updateInv(event.getInventory().getHolder());
-				inventories.put(event.getPlayer().getName(), inv);
+				inventories.put(id, inv);
 				event.setCancelled(true);
 				event.getPlayer().openInventory(inv.getCurrentInv());
 			}
 		}
-		if (openFastInv) openingFastInv.remove(event.getPlayer().getName());
-		if (openOtherInv) openingOtherInv.remove(event.getPlayer().getName());
+		if (openFastInv) openingFastInv.remove(id);
+		if (openOtherInv) openingOtherInv.remove(id);
 	}
 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event){
-		inventories.remove(event.getPlayer().getName());
+		if (!(event.getPlayer() instanceof Player)) return;
+		inventories.remove(PlayerUtil.getIdentifier((Player)event.getPlayer()));
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event){
-		inventories.remove(event.getPlayer().getName());
+		inventories.remove(PlayerUtil.getIdentifier(event.getPlayer()));
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)
 	public void onInventoryDrag(InventoryDragEvent event){
-		if (!isInvOpen(event.getWhoClicked()) || event.isCancelled()) return;
+		if (!(event.getWhoClicked() instanceof Player)) return;
+		Player player = (Player)event.getWhoClicked();
+		String id = PlayerUtil.getIdentifier(player);
+
+		if (!isInvOpen(player) || event.isCancelled()) return;
 		for (int i : event.getRawSlots()){
 			if (i < event.getView().getTopInventory().getSize()){
 				event.setResult(Result.DENY);
 				return;
 			}
 		}
-		final FastCraftInv inv = inventories.get(event.getWhoClicked().getName());
+		final FastCraftInv inv = inventories.get(id);
 		final Inventory topInv = event.getView().getTopInventory();
 		Inventory bottomInv = event.getView().getBottomInventory();
 		inv.setIngredients(new IngredientList(bottomInv.getContents()));
@@ -114,16 +125,16 @@ public class InventoryManager implements Listener {
 				topInv.setContents(inv.getCurrentInv().getContents());
 			}
 		}, 1);
-
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)
 	public void onInventoryClick(final InventoryClickEvent event){
-		if (event instanceof CraftItemEvent) return;
-		if (!isInvOpen(event.getWhoClicked()) || event.isCancelled() || event.getResult() == Result.DENY || event.getRawSlot() < 0) return;
-		
+		if (event instanceof CraftItemEvent || !(event.getWhoClicked() instanceof Player)) return;
+		if (!isInvOpen((Player)event.getWhoClicked()) || event.isCancelled() || event.getResult() == Result.DENY || event.getRawSlot() < 0) return;
+
 		final Player player = (Player)event.getWhoClicked();
-		FastCraftInv inv = inventories.get(event.getWhoClicked().getName());
+		String id = PlayerUtil.getIdentifier(player);
+		FastCraftInv inv = inventories.get(id);
 		Inventory topInv = event.getView().getTopInventory();
 		Inventory bottomInv = event.getView().getBottomInventory();
 		ItemStack clickedItem = event.getView().getItem(event.getRawSlot());
@@ -140,7 +151,7 @@ public class InventoryManager implements Listener {
 					inv.setPage(inv.getPage() + 1);
 					updateInv = true;
 				}else if (event.getSlot() == Settings.invButtonCraftSlot){
-					openingOtherInv.put(player.getName(), true);
+					openingOtherInv.put(id, true);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(FastCraft.plugin, new Runnable(){
 						public void run(){
 							player.openWorkbench(null, true);
@@ -156,44 +167,52 @@ public class InventoryManager implements Listener {
 					boolean removeIngredients = false;
 					boolean shiftAdd = false;
 					FastRecipe curRecipe = inv.getCraftableItems().get(inv.getPage() * Settings.craftItemRows * 9 + event.getSlot());
-					
-					final Inventory fakeTopInv = curRecipe.createCraftingInventory(event.getWhoClicked());
-					InventoryView fakeView = new InventoryView(){
-						@Override public Inventory getBottomInventory()
-						{ return event.getView().getBottomInventory(); }
-						@Override public HumanEntity getPlayer()
-						{ return event.getWhoClicked(); }
-						@Override public Inventory getTopInventory()
-						{ return fakeTopInv; }
-						@Override public InventoryType getType()
-						{ return fakeTopInv.getType(); }
-					};
-					
-					CraftItemEvent craftEvent = new CraftItemEvent(
-							curRecipe.getRecipe(),
-							fakeView,
-							SlotType.RESULT,
-							0, //Crafting result slot ID
-							event.getClick(),
-							event.getAction()
-					);
-					
-					ItemStack startItem = craftEvent.getCurrentItem();
-					Bukkit.getServer().getPluginManager().callEvent(craftEvent);
-					
-					boolean isCancelled = craftEvent.isCancelled();
-					boolean resultDeny = craftEvent.getResult() == Result.DENY;
-					
-					if (isCancelled || resultDeny){
-						event.setCancelled(craftEvent.isCancelled());
-						event.setResult(craftEvent.getResult());
-						return;
-					}
-					
-					ItemStack recipeResult = craftEvent.getCurrentItem();
-					craftEvent.setCurrentItem(startItem);
 
 					if (curRecipe.canCraft(inv.getIngredients())){
+						final Inventory fakeTopInv = curRecipe.createCraftingInventory(event.getWhoClicked());
+						InventoryView fakeView = new InventoryView(){
+							@Override public Inventory getBottomInventory()
+							{ return event.getView().getBottomInventory(); }
+							@Override public HumanEntity getPlayer()
+							{ return event.getWhoClicked(); }
+							@Override public Inventory getTopInventory()
+							{ return fakeTopInv; }
+							@Override public InventoryType getType()
+							{ return fakeTopInv.getType(); }
+						};
+
+						CraftItemEvent craftEvent = new CraftItemEvent(
+								curRecipe.getRecipe(),
+								fakeView,
+								SlotType.RESULT,
+								0, //Crafting result slot ID
+								event.getClick(),
+								event.getAction()
+								);
+
+						ItemStack startItem = craftEvent.getCurrentItem();
+						Bukkit.getServer().getPluginManager().callEvent(craftEvent);
+
+						boolean isCancelled = craftEvent.isCancelled();
+						boolean resultDeny = craftEvent.getResult() == Result.DENY;
+
+						if (isCancelled || resultDeny){
+							event.setCancelled(craftEvent.isCancelled());
+							event.setResult(craftEvent.getResult());
+							return;
+						}
+
+						ItemStack recipeResult = craftEvent.getCurrentItem();
+						craftEvent.setCurrentItem(startItem);
+
+						Achievement a = FastCraft.achievements.get(recipeResult.getType());
+						try{
+							if (a != null && !player.hasAchievement(a) && player.hasAchievement(a.getParent()))
+								player.awardAchievement(a);
+						}catch(NoSuchMethodError e){
+							player.awardAchievement(a);
+						}
+
 						switch (event.getClick()){
 						case LEFT:
 						case RIGHT:
@@ -405,7 +424,7 @@ public class InventoryManager implements Listener {
 		notAdded.setAmount(remaining);
 		return notAdded;
 	}
-	
+
 	private boolean canShiftAddToInv(ItemStack item, int amount, Inventory inv){
 		ItemStack newItem = new ItemStack(item);
 		Inventory newInv = Bukkit.createInventory(inv.getHolder(), inv.getSize());

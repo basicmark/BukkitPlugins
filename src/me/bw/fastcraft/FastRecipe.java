@@ -64,23 +64,23 @@ public class FastRecipe {
 	}
 	
 	public CraftingInventory createCraftingInventory(HumanEntity p){
-		final Inventory result = Bukkit.createInventory(p, 9);
+		final Inventory inv = Bukkit.createInventory(p, 18);
 		if (recipe instanceof ShapedRecipe){
 			ShapedRecipe r = (ShapedRecipe)recipe;
 			for (int row = 0; row < 3 && row < r.getShape().length; row++){
 				for (int col = 0; col < 3 && col < r.getShape()[row].length(); col++){
-					result.setItem(row + col + 1, r.getIngredientMap().get(r.getShape()[row].charAt(col)));
+					inv.setItem(row * 3 + col + 1, r.getIngredientMap().get(r.getShape()[row].charAt(col)));
 				}
 			}
 		}else if (recipe instanceof ShapelessRecipe){
 			ShapelessRecipe r = (ShapelessRecipe)recipe;
 			int curSlot = 1;
 			for (ItemStack ing : r.getIngredientList()){ //TODO
-				if (curSlot > 9) break;
-				result.setItem(curSlot++, ing);
+				if (curSlot > 10) break;
+				inv.setItem(curSlot++, ing);
 			}
 		}
-		result.setItem(0, recipe.getResult());
-		return new MyCraftingInventory(result, recipe);
+		inv.setItem(0, recipe.getResult());
+		return new MyCraftingInventory(inv, recipe);
 	}
 }

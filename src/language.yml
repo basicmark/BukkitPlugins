@@ -1,67 +1,13 @@
+# List of language keys here:
+# http://dev.bukkit.org/bukkit-plugins/fastcraft/pages/language-keys/
+
+# Change the default language values to what you want with the language keys
+
 # Variables are in the format %%#
 # Examples: %%0 %%1 %%2 etc.
 # %%n = next line
 
 # Formatting codes use &
+# Examples: &1 &4 &c &k etc.
 # Code list can be found here:
 # www.minecraftwiki.net/wiki/Formatting_codes
-
-errNoPerm: '&cYou don''t have permission: %%0'
-errCmdPlayerOnly: '&cYou need to be a player to use this command!'
-errPlayerNotFound: '&cPlayer $4%%0&c not found!'
-
-updateNotification: '&aFastCraft has been updated!'
-
-cmdFc: '/fastcraft'
-outFc:
-  |
-    &3=================== &bFastCraft Help&3 ====================
-    &a/fastcraft toggle [on/off/toggle] [player]
-    &3=====================================================
-cmdFcToggle: '/fastcraft toggle [on/off/toggle] [player]'
-outFcToggleOn: '&aNow using FastCraft for crafting.'
-outFcToggleOff: '&aNo longer using FastCraft for crafting.'
-outFcToggleOther: '&aSuccesfully toggled FastCraft for %%0!'
-outFcToggleOnOther: '&a%%0 is now using FastCraft for crafting.'
-outFcToggleOffOther: '&a%%0 is no longer using FastCraft for crafting.'
-    
-cmdFcAdmin: '/fastcraft admin'
-outFcAdmin:
-  |
-    &3================ &bFastCraft Admin Help&3 ==================
-    &a/fastcraft admin reload
-    &a/fastcraft admin update
-    &3=====================================================
-cmdFcAdminReload: '/fastcraft admin reload'
-outFcAdminReload: '&aReload complete.'
-
-cmdFcAdminUpdate: '/fastcraft admin update'
-outFcAdminUpdate-Checking: '&aChecking for updates...'
-outFcAdminUpdate-ErrFetch: '&cError fetching update information!'
-outFcAdminUpdate-None: '&aNo update found!'
-outFcAdminUpdate-Found: '&aFound update! Downloading...'
-outFcAdminUpdate-DlErr: '&cError downloading!'
-outFcAdminUpdate-Complete: '&aSuccessfully downloaded update!'
-
-invTitle: 'FastCraft'
-
-buttonPrevName: '&aPrevious Page'
-buttonPrevLore: '&3Go to page &b%%0/%%1'
-buttonNextName: '&aNext Page'
-buttonNextLore: '&3Go to page &b%%0/%%1'
-buttonHelpName: '&aFastCraft Help'
-buttonHelpLore:
-  |
-    &3To craft an item with FastCraft, all you
-    &3need to do is click the item you want to
-    &3craft. The materials required to craft
-    &3the item will be automatically removed
-    &3from your inventory, and you will be
-    &3given the crafted item. To craft normally,
-    &3click the workbench icon on the bottom.
-buttonCraftName: '&aCrafting'
-buttonCraftLore: '&3Show crafting grid'
-buttonRefreshName: '&aRefresh'
-buttonRefreshLore: '&3Re-sort items'
-
-ingredientsFormat: '&a%%0x %%1'

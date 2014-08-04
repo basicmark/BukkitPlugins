@@ -3,6 +3,8 @@ package me.bw.fastcraft;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.bw.fastcraft.util.Util;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -23,40 +25,40 @@ public class Settings {
 	public static ItemStack getInvButtonPrevItem(int prevPage, int totalPages){
 		ItemStack result = invButtonPrevItem.clone();
 		ItemMeta im = result.getItemMeta();
-		im.setDisplayName(Methods.getLang("buttonPrevName", prevPage+"", totalPages+""));
-		im.setLore(makeLore(Methods.getLang("buttonPrevLore", prevPage+"", totalPages+"")));
+		im.setDisplayName(Util.getLang("buttonPrevName", prevPage+"", totalPages+""));
+		im.setLore(makeLore(Util.getLang("buttonPrevLore", prevPage+"", totalPages+"")));
 		result.setItemMeta(im);
 		return result;
 	}
 	public static ItemStack getInvButtonNextItem(int nextPage, int totalPages){
 		ItemStack result = invButtonNextItem.clone();
 		ItemMeta im = result.getItemMeta();
-		im.setDisplayName(Methods.getLang("buttonNextName", nextPage+"", totalPages+""));
-		im.setLore(makeLore(Methods.getLang("buttonNextLore", nextPage+"", totalPages+"")));
+		im.setDisplayName(Util.getLang("buttonNextName", nextPage+"", totalPages+""));
+		im.setLore(makeLore(Util.getLang("buttonNextLore", nextPage+"", totalPages+"")));
 		result.setItemMeta(im);
 		return result;
 	}
 	public static ItemStack getInvButtonHelpItem(){
 		ItemStack result = invButtonHelpItem.clone();
 		ItemMeta im = result.getItemMeta();
-		im.setDisplayName(Methods.getLang("buttonHelpName"));
-		im.setLore(makeLore(Methods.getLang("buttonHelpLore")));
+		im.setDisplayName(Util.getLang("buttonHelpName"));
+		im.setLore(makeLore(Util.getLang("buttonHelpLore")));
 		result.setItemMeta(im);
 		return result;
 	}
 	public static ItemStack getInvButtonCraftItem(){
 		ItemStack result = invButtonCraftItem.clone();
 		ItemMeta im = result.getItemMeta();
-		im.setDisplayName(Methods.getLang("buttonCraftName"));
-		im.setLore(makeLore(Methods.getLang("buttonCraftLore")));
+		im.setDisplayName(Util.getLang("buttonCraftName"));
+		im.setLore(makeLore(Util.getLang("buttonCraftLore")));
 		result.setItemMeta(im);
 		return result;
 	}
 	public static ItemStack getInvButtonRefreshItem(){
 		ItemStack result = invButtonRefreshItem.clone();
 		ItemMeta im = result.getItemMeta();
-		im.setDisplayName(Methods.getLang("buttonRefreshName"));
-		im.setLore(makeLore(Methods.getLang("buttonRefreshLore")));
+		im.setDisplayName(Util.getLang("buttonRefreshName"));
+		im.setLore(makeLore(Util.getLang("buttonRefreshLore")));
 		result.setItemMeta(im);
 		return result;
 	}
@@ -74,22 +76,22 @@ public class Settings {
 	public static boolean fastCraftDefaultEnabled;
 	
 	public static void load(){
-		invTitle = FastCraft.langConfig.getString("invTitle");
+		invTitle = Util.getLang("invTitle");
 		
-		invButtonPrevItem = Methods.parseItem(FastCraft.config.getString("buttonPrevItem")).toItemStack(1);
-		invButtonNextItem = Methods.parseItem(FastCraft.config.getString("buttonNextItem")).toItemStack(1);
-		invButtonHelpItem = Methods.parseItem(FastCraft.config.getString("buttonHelpItem")).toItemStack(1);
-		invButtonCraftItem = Methods.parseItem(FastCraft.config.getString("buttonCraftItem")).toItemStack(1);
-		invButtonRefreshItem = Methods.parseItem(FastCraft.config.getString("buttonRefreshItem")).toItemStack(1);
+		invButtonPrevItem = Util.parseItem(FastCraft.config.getString("buttonPrevItem")).toItemStack(1);
+		invButtonNextItem = Util.parseItem(FastCraft.config.getString("buttonNextItem")).toItemStack(1);
+		invButtonHelpItem = Util.parseItem(FastCraft.config.getString("buttonHelpItem")).toItemStack(1);
+		invButtonCraftItem = Util.parseItem(FastCraft.config.getString("buttonCraftItem")).toItemStack(1);
+		invButtonRefreshItem = Util.parseItem(FastCraft.config.getString("buttonRefreshItem")).toItemStack(1);
 		
 		fastCraftDefaultEnabled = FastCraft.config.getBoolean("fastCraftDefaultEnabled");
 		
 		disabledRecipes = new ArrayList<Ingredient>();
 		for (String s : FastCraft.config.getStringList("disabledRecipes"))
-			disabledRecipes.add(new Ingredient(Methods.parseItem(s)));
+			disabledRecipes.add(new Ingredient(Util.parseItem(s)));
 		disabledIngredients = new ArrayList<Ingredient>();
 		for (String s : FastCraft.config.getStringList("disabledIngredients"))
-			disabledIngredients.add(new Ingredient(Methods.parseItem(s)));
+			disabledIngredients.add(new Ingredient(Util.parseItem(s)));
 	}
 	
 	private static List<String> makeLore(String lines){

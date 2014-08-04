@@ -2,8 +2,15 @@ package me.bw.fastcraft;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 
+import me.bw.fastcraft.util.PlayerUtil;
+import me.bw.fastcraft.util.Util;
+
+import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,13 +19,14 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FastCraft extends JavaPlugin {
-	public static String pluginDir = "plugins" + File.separator + "FastCraft" + File.separator;
-	public static File configFile = new File(pluginDir + "config.yml");
-	public static File langConfigFile = new File(pluginDir + "language.yml");
-	public static File ingredientsConfigFile = new File(pluginDir + "ingredients.yml");
-	public static File playerPrefsConfigFile = new File(pluginDir + "playerPrefs.yml");
-	public static File permsConfigFile = new File(pluginDir + "permissions.yml");
+	public static String pluginDir = "plugins/FastCraft/";
+	public static File configFile = new File(pluginDir, "config.yml");
+	public static File customLangConfigFile = new File(pluginDir, "language.yml");
+	public static File ingredientsConfigFile = new File(pluginDir, "ingredients.yml");
+	public static File playerPrefsConfigFile = new File(pluginDir, "playerPrefs.yml");
+	public static File permsConfigFile = new File(pluginDir, "permissions.yml");
 	public static YamlConfiguration config;
+	public static YamlConfiguration customLangConfig;
 	public static YamlConfiguration langConfig;
 	public static YamlConfiguration ingredientsConfig;
 	public static YamlConfiguration playerPrefsConfig;
@@ -26,6 +34,8 @@ public class FastCraft extends JavaPlugin {
 	public static JavaPlugin plugin;
 	public static int version;
 
+	public static HashMap<Material, Achievement> achievements = new HashMap<Material, Achievement>();
+	
 	public static InventoryManager inventoryManager;
 
 	public void onEnable(){
@@ -39,6 +49,8 @@ public class FastCraft extends JavaPlugin {
 
 		Permissions.setupPermissions();
 		version = Integer.parseInt(this.getDescription().getVersion());
+		
+		setupAchievements();
 		
 		reload();
 		MetricsStarter.start(this);
@@ -62,7 +74,7 @@ public class FastCraft extends JavaPlugin {
 		config = YamlConfiguration.loadConfiguration(configFile);
 		ConfigUpdater.update();
 
-		if (!langConfigFile.exists())
+		if (!customLangConfigFile.exists())
 			this.saveResource("language.yml", false);
 		if (!ingredientsConfigFile.exists())
 			this.saveResource("ingredients.yml", false);
@@ -70,132 +82,153 @@ public class FastCraft extends JavaPlugin {
 			this.saveResource("playerPrefs.yml", false);
 		if (!permsConfigFile.exists())
 			this.saveResource("permissions.yml", false);
-		langConfig = YamlConfiguration.loadConfiguration(langConfigFile);
+		customLangConfig = YamlConfiguration.loadConfiguration(customLangConfigFile);
 		ingredientsConfig = YamlConfiguration.loadConfiguration(ingredientsConfigFile);
 		playerPrefsConfig = YamlConfiguration.loadConfiguration(playerPrefsConfigFile);
 		permsConfig = YamlConfiguration.loadConfiguration(permsConfigFile);
+		
+		
+		InputStream languageResource = getResource("languages/" + config.getString("language").toUpperCase() + ".yml");
+		if (languageResource == null)
+			config.set("language", "EN");
+		langConfig = Util.configFromResource("languages/" + config.getString("language").toUpperCase() + ".yml");
 		
 		Settings.load();
 		
 		for (Player p : Bukkit.getOnlinePlayers())
 			PluginUpdater.notifyOfUpdateIfNeeded(p);
 	}
-
+	public static void setupAchievements(){
+		addAchievement(Material.STONE_PICKAXE, "BUILD_BETTER_PICKAXE");
+		addAchievement(Material.FURNACE, "BUILD_FURNACE");
+		addAchievement(Material.WOOD_HOE, "BUILD_HOE");
+		addAchievement(Material.WOOD_PICKAXE, "BUILD_PICKAXE");
+		addAchievement(Material.WOOD_SWORD, "BUILD_SWORD");
+		addAchievement(Material.WORKBENCH, "BUILD_WORKBENCH");
+	}
+	public static void addAchievement(Material m, String achievement){
+		try{
+			achievements.put(m, Achievement.valueOf(achievement));
+		}catch(Exception e){}
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if (cmd.getName().equals("fastcraft")){
 			if (!Permissions.playerHas(sender, "fastcraft.use")){
-				Methods.sendLang(sender, "errNoPerm", "fastcraft.use");
+				Util.sendLang(sender, "errNoPerm", "fastcraft.use");
 				return true;
 			}
 			if (args.length == 0){
-				Methods.sendLang(sender, "outFc");
+				Util.sendLang(sender, "outFc");
 			}else{
 				if (args[0].equalsIgnoreCase("admin")){
 					if (!Permissions.playerHas(sender, "fastcraft.admin")){
-						Methods.sendLang(sender, "errNoPerm", "fastcraft.admin");
+						Util.sendLang(sender, "errNoPerm", "fastcraft.admin");
 						return true;
 					}
 					if (args.length == 1){
-						Methods.sendLang(sender, "outFcAdmin");
+						Util.sendLang(sender, "outFcAdmin");
 					}else if (args[1].equalsIgnoreCase("reload")){
 						if (!Permissions.playerHas(sender, "fastcraft.admin.reload")){
-							Methods.sendLang(sender, "errNoPerm", "fastcraft.admin.reload");
+							Util.sendLang(sender, "errNoPerm", "fastcraft.admin.reload");
 							return true;
 						}
 						if (args.length == 2){
 							reload();
-							Methods.sendLang(sender, "outFcAdminReload");
+							Util.sendLang(sender, "outFcAdminReload");
 						}else{
-							Methods.sendLang(sender, "cmdFcAdminReload");
+							Util.sendLang(sender, "cmdFcAdminReload");
 						}
 					}else if (args[1].equalsIgnoreCase("update")){
 						if (!Permissions.playerHas(sender, "fastcraft.admin.update")){
-							Methods.sendLang(sender, "errNoPerm", "fastcraft.admin.update");
+							Util.sendLang(sender, "errNoPerm", "fastcraft.admin.update");
 							return true;
 						}
 						if (args.length == 2){
 							PluginUpdater.update(sender);
 						}else{
-							Methods.sendLang(sender, "cmdFcAdminUpdate");
+							Util.sendLang(sender, "cmdFcAdminUpdate");
 						}
 					}else{
-						Methods.sendLang(sender, "cmdFcAdmin");
+						Util.sendLang(sender, "cmdFcAdmin");
 					}
 				}else if (args[0].equalsIgnoreCase("toggle")){
 					if (!Permissions.playerHas(sender, "fastcraft.toggle")){
-						Methods.sendLang(sender, "errNoPerm", "fastcraft.toggle");
+						Util.sendLang(sender, "errNoPerm", "fastcraft.toggle");
 					}else{
 						if (args.length == 1){
 							if (sender instanceof Player){
 								Player player = (Player)sender;
-								boolean newVal = inventoryManager.togglePlayer(player.getName());
+								boolean newVal = inventoryManager.togglePlayer(PlayerUtil.getIdentifier(player));
 								if (newVal){
-									Methods.sendLang(player, "outFcToggleOn");
+									Util.sendLang(player, "outFcToggleOn");
 								}else{
-									Methods.sendLang(player, "outFcToggleOff");
+									Util.sendLang(player, "outFcToggleOff");
 								}
 							}else{
-								Methods.sendLang(sender, "cmdFcToggle");
+								Util.sendLang(sender, "cmdFcToggle");
 							}	
 						}else if (args.length == 2){
 							if (sender instanceof Player){
 								Player player = (Player)sender;
+								String identifier = PlayerUtil.getIdentifier(player);
 								if (args[1].equalsIgnoreCase("on")){
-									inventoryManager.togglePlayer(player.getName(), true);
-									Methods.sendLang(player, "outFcToggleOn");
+									inventoryManager.togglePlayer(identifier, true);
+									Util.sendLang(player, "outFcToggleOn");
 								}else if (args[1].equalsIgnoreCase("off")){
-									inventoryManager.togglePlayer(player.getName(), false);
-									Methods.sendLang(player, "outFcToggleOff");
+									inventoryManager.togglePlayer(identifier, false);
+									Util.sendLang(player, "outFcToggleOff");
 								}else if (args[1].equalsIgnoreCase("toggle")){
-									boolean newVal = inventoryManager.togglePlayer(player.getName());
+									boolean newVal = inventoryManager.togglePlayer(identifier);
 									if (newVal){
-										Methods.sendLang(player, "outFcToggleOn");
+										Util.sendLang(player, "outFcToggleOn");
 									}else{
-										Methods.sendLang(player, "outFcToggleOff");
+										Util.sendLang(player, "outFcToggleOff");
 									}
 								}else{
-									Methods.sendLang(sender, "cmdFcToggle");
+									Util.sendLang(sender, "cmdFcToggle");
 								}
 							}else{
-								Methods.sendLang(sender, "errCmdPlayerOnly");
+								Util.sendLang(sender, "errCmdPlayerOnly");
 							}
 						}else if (args.length == 3){
 							if (!Permissions.playerHas(sender, "fastcraft.toggle.other")){
-								Methods.sendLang(sender, "errNoPerm", "fastcraft.toggle.other");
+								Util.sendLang(sender, "errNoPerm", "fastcraft.toggle.other");
 							}else{
-								Player player = Methods.getPlayer(args[2]);
+								Player player = PlayerUtil.getOnlinePlayer(args[2]);
 								if (player != null){
+									String identifier = PlayerUtil.getIdentifier(player);
 									if (args[1].equalsIgnoreCase("on")){
-										inventoryManager.togglePlayer(player.getName(), true);
-										Methods.sendLang(player, "outFcToggleOn");
-										Methods.sendLang(sender, "outFcToggleOnOther", player.getName());
+										inventoryManager.togglePlayer(identifier, true);
+										Util.sendLang(player, "outFcToggleOn");
+										Util.sendLang(sender, "outFcToggleOnOther", identifier);
 									}else if (args[1].equalsIgnoreCase("off")){
-										inventoryManager.togglePlayer(player.getName(), false);
-										Methods.sendLang(player, "outFcToggleOff");
-										Methods.sendLang(sender, "outFcToggleOffOther", player.getName());
+										inventoryManager.togglePlayer(identifier, false);
+										Util.sendLang(player, "outFcToggleOff");
+										Util.sendLang(sender, "outFcToggleOffOther", identifier);
 									}else if (args[1].equalsIgnoreCase("toggle")){
-										boolean newVal = inventoryManager.togglePlayer(player.getName());
+										boolean newVal = inventoryManager.togglePlayer(identifier);
 										if (newVal){
-											Methods.sendLang(sender, "outFcToggleOnOther", player.getName());
-											Methods.sendLang(player, "outFcToggleOn");
+											Util.sendLang(sender, "outFcToggleOnOther", identifier);
+											Util.sendLang(player, "outFcToggleOn");
 										}else{
-											Methods.sendLang(sender, "outFcToggleOffOther", player.getName());
-											Methods.sendLang(player, "outFcToggleOff");
+											Util.sendLang(sender, "outFcToggleOffOther", identifier);
+											Util.sendLang(player, "outFcToggleOff");
 										}
 									}else{
-										Methods.sendLang(sender, "cmdFcToggle");
+										Util.sendLang(sender, "cmdFcToggle");
 									}
 								}else{
-									Methods.sendLang(sender, "errPlayerNotFound", args[2]);
-									Methods.sendLang(sender, "cmdFcToggle");
+									Util.sendLang(sender, "errPlayerNotFound", args[2]);
+									Util.sendLang(sender, "cmdFcToggle");
 								}
 							}
 						}else if (args.length > 3){
-							Methods.sendLang(sender, "fcToggle");
+							Util.sendLang(sender, "fcToggle");
 						}
 					}
 				}else{
-					Methods.sendLang(sender, "cmdFc");
+					Util.sendLang(sender, "cmdFc");
 				}
 			}
 		}

@@ -26,6 +26,9 @@ public class MetricsStarter {
 				defaultEnabled.addPlotter(new MyPlotter("Disabled", 1));
 			}
 
+			Graph language = m.createGraph("Language");
+			language.addPlotter(new MyPlotter(FastCraft.config.getString("language").toUpperCase(), 1));
+
 			m.start();
 		} catch (IOException e) {
 			System.out.println("[FastCraft] Error submitting plugin metrics!");

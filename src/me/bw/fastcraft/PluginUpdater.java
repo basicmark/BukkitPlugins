@@ -2,6 +2,8 @@ package me.bw.fastcraft;
 
 import java.io.File;
 
+import me.bw.fastcraft.util.PlayerUtil;
+import me.bw.fastcraft.util.Util;
 import net.gravitydevelopment.updater.Updater;
 import net.gravitydevelopment.updater.Updater.UpdateResult;
 import net.gravitydevelopment.updater.Updater.UpdateType;
@@ -38,7 +40,7 @@ public class PluginUpdater {
 	}
 	
 	public static Updater update(CommandSender sender){
-		Methods.sendLang(sender, "outFcAdminUpdate-Checking");
+		Util.sendLang(sender, "outFcAdminUpdate-Checking");
 		Updater updater = new Updater(FastCraft.plugin, 63587, file, UpdateType.DEFAULT, true);
 		
 		switch (updater.getResult()){
@@ -48,19 +50,19 @@ public class PluginUpdater {
 		case FAIL_BADID:
 		case FAIL_DBO:
 		case FAIL_NOVERSION:
-			Methods.sendLang(sender, "outFcAdminUpdate-ErrFetch");
+			Util.sendLang(sender, "outFcAdminUpdate-ErrFetch");
 			break;
 		case FAIL_DOWNLOAD:
-			Methods.sendLang(sender, "outFcAdminUpdate-DlErr");
+			Util.sendLang(sender, "outFcAdminUpdate-DlErr");
 			break;
 		case NO_UPDATE:
-			Methods.sendLang(sender, "outFcAdminUpdate-None");
+			Util.sendLang(sender, "outFcAdminUpdate-None");
 			break;
 		case SUCCESS:
-			Methods.sendLang(sender, "outFcAdminUpdate-Complete");
+			Util.sendLang(sender, "outFcAdminUpdate-Complete");
 			break;
 		case UPDATE_AVAILABLE:
-			Methods.sendLang(sender, "outFcAdminUpdate-Found");
+			Util.sendLang(sender, "outFcAdminUpdate-Found");
 			break;
 		}
 		
@@ -73,11 +75,11 @@ public class PluginUpdater {
 	
 	public static void notifyPlayers(CommandSender sender){
 		for (String s : FastCraft.config.getStringList("notifyPlayersOnUpdate")){
-			Player p = Bukkit.getPlayer(s);
+			Player p = PlayerUtil.getOnlinePlayer(s);
 			if (p == null){
 				FastCraft.playerPrefsConfig.set(s, true);
 			}else if (p != sender){
-				Methods.sendLang(sender, "updateNotification");
+				Util.sendLang(sender, "updateNotification");
 			}
 		}
 	}
@@ -86,7 +88,7 @@ public class PluginUpdater {
 		String key = p.getName() + ".notifyUpdate";
 		if (FastCraft.config.getStringList("notifyPlayersOnUpdate").contains(p.getName()) &&
 				FastCraft.playerPrefsConfig.getBoolean(key, false)){
-			Methods.sendLang(p, "updateNotification");
+			Util.sendLang(p, "updateNotification");
 			FastCraft.playerPrefsConfig.set(key, null);
 		}
 	}
