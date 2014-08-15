@@ -16,9 +16,11 @@ public class PlayerUtil {
 		return Util.getBukkitBuild() >= 3035;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Player getOnlinePlayer(String name){
-		return Bukkit.getPlayer(name);
+		for (Player p : Bukkit.getOnlinePlayers())
+			if (getIdentifier(p).equals(name))
+				return p;
+		return null;
 	}
 
 	public static boolean getPlayerPreference(Player p, String preference){

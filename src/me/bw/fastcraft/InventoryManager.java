@@ -141,6 +141,7 @@ public class InventoryManager implements Listener {
 
 		boolean updateInv = false;
 		if (event.getRawSlot() >= 0 && event.getRawSlot() < event.getView().getTopInventory().getSize()){
+			//Clicked in top inventory
 			event.setResult(Result.DENY);
 			if (clickedItem != null && clickedItem.getType() != Material.AIR){
 				boolean click = true;
@@ -267,6 +268,7 @@ public class InventoryManager implements Listener {
 				if (click) player.playSound(player.getLocation(), Sound.CLICK, 1, 1);
 			}
 		}else if (event.getRawSlot() > 0){
+			//Clicked in bottom inventory
 			event.setResult(Result.DENY);
 			switch (event.getClick()){
 			case CONTROL_DROP:
@@ -309,11 +311,11 @@ public class InventoryManager implements Listener {
 				if (event.getCurrentItem().getType() == Material.AIR){
 					if (player.getItemOnCursor().getAmount() > 1){
 						event.setCurrentItem(player.getItemOnCursor());
-						player.setItemOnCursor(null);
-					}else{
-						event.setCurrentItem(player.getItemOnCursor());
 						event.getCurrentItem().setAmount(1);
 						player.getItemOnCursor().setAmount(player.getItemOnCursor().getAmount() - 1);
+					}else{
+						event.setCurrentItem(player.getItemOnCursor());
+						player.setItemOnCursor(null);
 					}
 				}else if (player.getItemOnCursor().getType() == Material.AIR){
 					int take = (int)Math.ceil(event.getCurrentItem().getAmount() / 2.);
@@ -376,12 +378,7 @@ public class InventoryManager implements Listener {
 				//TODO
 				break;
 			case SHIFT_RIGHT:
-				//TODO
-				break;
 			case SHIFT_LEFT:
-				//TODO
-				break;
-			case CREATIVE:
 				//TODO
 				break;
 			default:
