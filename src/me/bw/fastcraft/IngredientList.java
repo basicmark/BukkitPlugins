@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class IngredientList {
@@ -135,15 +136,22 @@ public class IngredientList {
 		return false;
 	}
 
-	public boolean removeFromInv(Inventory inv){
+	public boolean removeFromInv(InventoryView view){
 		List<Ingredient> remaining = new ArrayList<Ingredient>();
 		for (Ingredient i : ingredients) remaining.add(new Ingredient(i));
 
 		int bucketsToAdd = 0;
-		for (int i = 0; i < inv.getContents().length; i++){
-			if (inv.getItem(i) == null) continue;
-			Ingredient curRemoveFrom = new Ingredient(inv.getItem(i));
-			for (int wild = 0; wild <= 1 && inv.getItem(i) != null; wild++){
+		int topSize = view.getTopInventory().getSize();
+		int end = topSize + view.getBottomInventory().getSize();
+		boolean stop = false;
+		for (int i = topSize; i <= end && !stop; i++){
+			if (i == end){
+				i = InventoryView.OUTSIDE;
+				stop = true;
+			}
+			if (view.getItem(i) == null) continue;
+			Ingredient curRemoveFrom = new Ingredient(view.getItem(i));
+			for (int wild = 0; wild <= 1 && view.getItem(i) != null; wild++){
 				for (Ingredient curRemove : remaining){
 					boolean remove = false;
 					if (wild == 0){
@@ -156,11 +164,11 @@ public class IngredientList {
 						}
 					}
 					if (remove) {
-						int removeAmount = Math.min(curRemove.getAmount(), inv.getItem(i).getAmount());
-						if (inv.getItem(i).getAmount() - removeAmount == 0){
-							inv.setItem(i, null);
+						int removeAmount = Math.min(curRemove.getAmount(), view.getItem(i).getAmount());
+						if (view.getItem(i).getAmount() - removeAmount == 0){
+							view.setItem(i, null);
 						}else{
-							inv.getItem(i).setAmount(inv.getItem(i).getAmount() - removeAmount);
+							view.getItem(i).setAmount(view.getItem(i).getAmount() - removeAmount);
 						}
 						curRemove.setAmount(curRemove.getAmount() - removeAmount);
 
@@ -173,6 +181,7 @@ public class IngredientList {
 				}
 			}
 		}
+		Inventory inv = view.getBottomInventory();
 		for (int cur = 0; cur <= 1 && bucketsToAdd > 0; cur++){
 			for (int i = 0; i < inv.getSize() && bucketsToAdd > 0; i++){
 				ItemStack curItem = inv.getItem(i);

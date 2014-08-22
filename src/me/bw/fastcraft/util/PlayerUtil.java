@@ -16,9 +16,9 @@ public class PlayerUtil {
 		return Util.getBukkitBuild() >= 3035;
 	}
 
-	public static Player getOnlinePlayer(String name){
+	public static Player getOnlinePlayer(String identifier){
 		for (Player p : Bukkit.getOnlinePlayers())
-			if (getIdentifier(p).equals(name))
+			if (getIdentifier(p).equals(identifier))
 				return p;
 		return null;
 	}

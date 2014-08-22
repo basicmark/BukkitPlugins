@@ -1,6 +1,8 @@
 package me.bw.fastcraft;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import me.bw.fastcraft.util.PlayerUtil;
 
@@ -99,30 +101,42 @@ public class InventoryManager implements Listener {
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)
-	public void onInventoryDrag(InventoryDragEvent event){
-		if (!(event.getWhoClicked() instanceof Player)) return;
-		Player player = (Player)event.getWhoClicked();
+	public void onInventoryDrag(final InventoryDragEvent event){
+		if (!(event.getWhoClicked() instanceof Player) || event.isCancelled()) return;
+		final Player player = (Player)event.getWhoClicked();
 		String id = PlayerUtil.getIdentifier(player);
 
-		if (!isInvOpen(player) || event.isCancelled()) return;
+		if (!isInvOpen(player)) return;
+		List<Integer> toRemove = new ArrayList<Integer>();
+		int removedItems = 0;
 		for (int i : event.getRawSlots()){
 			if (i < event.getView().getTopInventory().getSize()){
-				event.setResult(Result.DENY);
-				return;
+				toRemove.add(i);
+				removedItems += event.getNewItems().get(i).getAmount();
 			}
 		}
+		for (int i : toRemove)
+			event.getRawSlots().remove(i);
+
+		if (event.getCursor() == null){
+			event.setCursor(event.getOldCursor());
+			event.getCursor().setAmount(removedItems);
+		}else{
+			event.getCursor().setAmount(event.getCursor().getAmount() + removedItems);
+		}
+
 		final FastCraftInv inv = inventories.get(id);
 		final Inventory topInv = event.getView().getTopInventory();
 		Inventory bottomInv = event.getView().getBottomInventory();
 		inv.setIngredients(new IngredientList(bottomInv.getContents()));
-		for (ItemStack is : event.getNewItems().values()){
+		for (ItemStack is : event.getNewItems().values())
 			inv.getIngredients().add(new Ingredient(is, is.getAmount()));
-		}
 		inv.updateInv(topInv.getHolder());
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(FastCraft.plugin, new Runnable(){
 			public void run(){
 				topInv.setContents(inv.getCurrentInv().getContents());
+				player.setItemOnCursor(event.getCursor());
 			}
 		}, 1);
 	}
@@ -249,11 +263,10 @@ public class InventoryManager implements Listener {
 							//TODO
 							break;
 						default:
-							//Shouldn't be possible to get to this point
 							break;
 						}
 						if (removeIngredients){
-							curRecipe.getIngredients().removeFromInv(player.getInventory());
+							curRecipe.getIngredients().removeFromInv(event.getView());
 							updateInv = true;
 						}
 						if (shiftAdd){
@@ -272,7 +285,7 @@ public class InventoryManager implements Listener {
 			event.setResult(Result.DENY);
 			switch (event.getClick()){
 			case CONTROL_DROP:
-				player.getInventory().setItem(InventoryView.OUTSIDE, event.getCurrentItem()); //TODO Not dropping in the right direction
+				player.getInventory().setItem(InventoryView.OUTSIDE, event.getCurrentItem());
 				bottomInv.setItem(event.getSlot(), null);
 				break;
 			case DROP:
@@ -375,11 +388,54 @@ public class InventoryManager implements Listener {
 			case UNKNOWN:
 				updateInv = true;
 			case DOUBLE_CLICK:
-				//TODO
+				for (int i = 9; i < 45; i++){
+					int slot = i % 36;
+					ItemStack cur = bottomInv.getItem(slot);
+					if (event.getCursor().isSimilar(cur)){
+						int amount = cur.getAmount();
+						if (amount + event.getCursor().getAmount() > cur.getMaxStackSize())
+							amount = cur.getMaxStackSize() - event.getCursor().getAmount();
+						if (amount == cur.getAmount())
+							bottomInv.setItem(slot, null);
+						else
+							cur.setAmount(cur.getAmount() - amount);
+						player.getItemOnCursor().setAmount(event.getCursor().getAmount() + amount);
+						if (event.getCursor().getAmount() == event.getCursor().getMaxStackSize())
+							break;
+					}
+				}
 				break;
 			case SHIFT_RIGHT:
 			case SHIFT_LEFT:
-				//TODO
+				ItemStack item = event.getCurrentItem();
+				if (item == null) break;
+				boolean top = event.getSlot() < 9;
+				int start = top ? 9 : 0;
+				int end = top ? 36 : 9;
+				for (int i = start; i < end; i++){
+					ItemStack cur = bottomInv.getItem(i);
+					if (item.isSimilar(cur)){
+						int add = cur.getMaxStackSize() - cur.getAmount();
+						if (add <= 0) continue;
+						add = Math.min(add, item.getAmount());
+						cur.setAmount(cur.getAmount() + add);
+						if (item.getAmount() == add){
+							item = null;
+							event.setCurrentItem(null);
+							break;
+						}else{
+							item.setAmount(item.getAmount() - add);
+						}
+					}
+				}
+				if (item == null) break;
+				for (int i = start; i < end; i++){
+					if (bottomInv.getItem(i) == null){
+						bottomInv.setItem(i, item);
+						event.setCurrentItem(null);
+						break;
+					}
+				}
 				break;
 			default:
 				break;

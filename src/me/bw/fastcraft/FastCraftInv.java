@@ -62,9 +62,7 @@ public class FastCraftInv {
 		}
 		Collections.sort(newRecipes, new Comparator<FastRecipe>(){
 			public int compare(FastRecipe is0, FastRecipe is1) {
-				if (is0.getResult().getTypeId() == is1.getResult().getTypeId())
-					return is0.getResult().getDurability() - is1.getResult().getDurability();
-				return is0.getResult().getTypeId() - is1.getResult().getTypeId();
+				return is0.getResult().getType().compareTo(is1.getResult().getType());
 			}
 		});
 		craftableItems.addAll(newRecipes);

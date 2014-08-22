@@ -29,6 +29,7 @@ public class ConfigUpdater {
 		case 12:
 		case 13:
 		case 14:
+		case 15:
 		}
 		conf.set("version-DoNotEdit", FastCraft.version);
 

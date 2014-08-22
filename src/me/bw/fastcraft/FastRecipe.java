@@ -75,7 +75,7 @@ public class FastRecipe {
 		}else if (recipe instanceof ShapelessRecipe){
 			ShapelessRecipe r = (ShapelessRecipe)recipe;
 			int curSlot = 1;
-			for (ItemStack ing : r.getIngredientList()){ //TODO
+			for (ItemStack ing : r.getIngredientList()){
 				if (curSlot > 10) break;
 				inv.setItem(curSlot++, ing);
 			}
