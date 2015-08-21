@@ -1,14 +1,16 @@
 name: FastCraft
-version: 15
-main: me.bw.fastcraft.FastCraft
-depend: []
-softdepend:
-- Vault
-- Spout
 author: Kepler_
+version: 16
+
+description: Improved crafting in Minecraft
+
+main: co.kepler.fastcraft.FastCraft
+
+softdepend: [Vault]
+
 commands:
   fastcraft:
     description: FastCraft commands.
-    usage: /<command>
+    usage: /fastcraft
     aliases:
     - fc

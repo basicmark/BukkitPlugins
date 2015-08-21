@@ -1,39 +1,26 @@
 errNoPerm: '&cYou don''t have permission: %%0'
+errCmdUsage: '&cUsage: /fastcraft %%0'
 errCmdPlayerOnly: '&cYou need to be a player to use this command!'
-errPlayerNotFound: '&cPlayer $4%%0&c not found!'
+errPlayerNotFound: '&cPlayer &4%%0&c not found!'
 
-updateNotification: '&aFastCraft has been updated!'
+updateNotification: '&aA FastCraft update is available! (%%0)'
 
-cmdFc: '/fastcraft'
-outFc:
-  |
-    &3=================== &bFastCraft Help&3 ====================
-    &a/fastcraft toggle [on/off/toggle] [player]
-    &3=====================================================
-cmdFcToggle: '/fastcraft toggle [on/off/toggle] [player]'
 outFcToggleOn: '&aNow using FastCraft for crafting.'
 outFcToggleOff: '&aNo longer using FastCraft for crafting.'
 outFcToggleOther: '&aSuccesfully toggled FastCraft for %%0!'
 outFcToggleOnOther: '&a%%0 is now using FastCraft for crafting.'
 outFcToggleOffOther: '&a%%0 is no longer using FastCraft for crafting.'
-    
-cmdFcAdmin: '/fastcraft admin'
-outFcAdmin:
-  |
-    &3================ &bFastCraft Admin Help&3 ==================
-    &a/fastcraft admin reload
-    &a/fastcraft admin update
-    &3=====================================================
-cmdFcAdminReload: '/fastcraft admin reload'
+
 outFcAdminReload: '&aReload complete.'
 
-cmdFcAdminUpdate: '/fastcraft admin update'
 outFcAdminUpdate-Checking: '&aChecking for updates...'
 outFcAdminUpdate-ErrFetch: '&cError fetching update information!'
-outFcAdminUpdate-None: '&aNo update found!'
-outFcAdminUpdate-Found: '&aFound update! Downloading...'
-outFcAdminUpdate-DlErr: '&cError downloading!'
-outFcAdminUpdate-Complete: '&aSuccessfully downloaded update!'
+outFcAdminUpdate-None: '&aThere are no available updates!'
+outFcAdminUpdate-Available: '&aAn update is available! (%%0)'
+outFcAdminUpdate-Downloading: '&aDownloading update...'
+outFcAdminUpdate-DlErr: '&cError downloading! (%%0)'
+outFcAdminUpdate-Complete: '&aSuccessfully downloaded update! (%%0)'
+outFcAdminUpdate-Downloaded: '&aAn update has already been downloaded! (%%0)'
 
 invTitle: 'FastCraft'
 

@@ -1,39 +1,26 @@
 errNoPerm: '&cUsted no tiene permiso: %%0'
+errCmdUsage: '&Uso: /fastcraft %%0'
 errCmdPlayerOnly: '&cTienes que ser un jugador para utilizar este comando!'
-errPlayerNotFound: '&cJugador $4%%0&c no encontrado!'
+errPlayerNotFound: '&cJugador &4%%0&c no encontrado!'
 
 updateNotification: '&aFastCraft ha sido actualizado!'
 
-cmdFc: '/fastcraft'
-outFc:
-  |
-    &3=================== &bFastCraft Ayuda&3 ===================
-    &a/fastcraft toggle [on/off/toggle] [jugador]
-    &3=====================================================
-cmdFcToggle: '/fastcraft toggle [on/off/toggle] [jugador]'
 outFcToggleOn: '&aAhora, utilizando FastCraft para hacer a mano.'
 outFcToggleOff: '&aYa no uso FastCraft para la elaboracion de.'
 outFcToggleOther: '&aFastCraft exito conmutado por %%0!'
 outFcToggleOnOther: '&a%%0 esta utilizando actualmente para elaborar FastCraft.'
 outFcToggleOffOther: '&a%%0 ya no se utiliza para elaborar FastCraft.'
-    
-cmdFcAdmin: '/fastcraft admin'
-outFcAdmin:
-  |
-    &3================ &bFastCraft Admin Ayuda&3 =================
-    &a/fastcraft admin reload
-    &a/fastcraft admin update
-    &3=====================================================
-cmdFcAdminReload: '/fastcraft admin reload'
+
 outFcAdminReload: '&aRecarga completa.'
 
-cmdFcAdminUpdate: '/fastcraft admin update'
 outFcAdminUpdate-Checking: '&aComprobacion de actualizaciones...'
 outFcAdminUpdate-ErrFetch: '&cError al obtener informacion de actualizacion!'
 outFcAdminUpdate-None: '&aNo hay ninguna actualizacion disponible!'
-outFcAdminUpdate-Found: '&aEncontrar actualizacion! Descargar...'
-outFcAdminUpdate-DlErr: '&cError al descargar!'
-outFcAdminUpdate-Complete: '&aActualizacion descargado correctamente!'
+outFcAdminUpdate-Available: '&aEncontrar actualizacion! (%%0)'
+outFcAdminUpdate-Downloading: '&aLa descarga de la actualizacion'
+outFcAdminUpdate-DlErr: '&cError al descargar! (%%0)'
+outFcAdminUpdate-Complete: '&aActualizacion descargado correctamente! (%%0)'
+outFcAdminUpdate-Downloaded: '&aUna actualizacion ya se ha descargado! (%%0)'
 
 invTitle: 'FastCraft'
 
