@@ -1,0 +1,48 @@
+errNoPerm: '&cSie haben keine Zugriffsberechtigung: %%0'
+errCmdUsage: '&cVerwendung: /FastCraft %%0'
+errCmdPlayerOnly: '&cSie mussen sich ein Spieler, um diesen Befehl verwenden zu konnen!'
+errPlayerNotFound: '&cSpieler &4%%0&c nicht gefunden!'
+
+updateNotification: '&aEin FastCraft Update verfugbar! (%%0)'
+
+outFcToggleOn: '&aJetzt mit FastCraft zum Basteln.'
+outFcToggleOff: '&aNicht mehr mit FastCraft zum Basteln.'
+outFcToggleOther: '&aErfolgreich umgeschaltet FastCraft fur %%0!'
+outFcToggleOnOther: '&a%%0 ist jetzt mit FastCraft zum Basteln.'
+outFcToggleOffOther: '&a%%0 wird nicht mehr mit FastCraft zum Basteln.'
+
+outFcAdminReload: '&aReload komplett.'
+
+outFcAdminUpdate-Checking: '&aSuche nach Updates...'
+outFcAdminUpdate-ErrFetch: '&cFehler beim Abrufen der Update-Informationen!'
+outFcAdminUpdate-None: '&aEs gibt keine verfugbaren Aktualisierungen!'
+outFcAdminUpdate-Available: '&aEin Update ist verfugbar! (%%0)'
+outFcAdminUpdate-Downloading: '&aHerunterladen von Updates...'
+outFcAdminUpdate-DlErr: '&cFehler beim Herunterladen! (%%0)'
+outFcAdminUpdate-Complete: '&aUpdate erfolgreich heruntergeladen! (%%0)'
+outFcAdminUpdate-Downloaded: '&aEin Update bereits heruntergeladen! (%%0)'
+
+invTitle: 'FastCraft'
+
+buttonPrevName: '&aVorherige Seite'
+buttonPrevLore: '&3Gehen Sie zu Seite &b%%0/%%1'
+buttonNextName: '&aFolgeseite'
+buttonNextLore: '&3Gehen Sie zu Seite &b%%0/%%1'
+buttonHelpName: '&aFastCraft Hilfe'
+buttonHelpLore:
+  |
+    &3Um einen Artikel mit FastCraft Kunsthandwerk,
+    &3ist alles was Sie tun mussen, klicken Sie auf
+    &3das Element, das Sie in Hand mochten. Die
+    &3Materialien erforderlich, um Handwerk wird
+    &3der Artikel automatisch aus dem Inventar
+    &3entfernt werden, und Sie werden die
+    &3handgefertigter Gegenstand gegeben werden.
+    &3Normal zu Kunsthandwerk, klicken Sie auf die
+    &3Workbench-Symbol auf der Unterseite.
+buttonCraftName: '&aCrafting'
+buttonCraftLore: '&3Show Crafting Gitter'
+buttonRefreshName: '&aErfrischen'
+buttonRefreshLore: '&3Artikel wieder Sortieren'
+
+ingredientsFormat: '&a%%0x %%1'

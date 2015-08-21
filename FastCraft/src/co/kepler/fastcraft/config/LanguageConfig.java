@@ -2,6 +2,7 @@ package co.kepler.fastcraft.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,8 +31,13 @@ public class LanguageConfig {
 	public void load(String lang) throws IOException, InvalidConfigurationException {
 		// Load default language entries from resources
 		String resource = "languages/" + lang.toUpperCase() + ".yml";
-		defaults.load(FastCraft.get().getResource(resource));
-
+		InputStream stream = FastCraft.get().getResource(resource);
+		defaults.load(stream);
+		if (stream == null) {
+			FastCraft.info("Invalid language: " + lang.toUpperCase());
+		}
+		
+		
 		// Load language config file, and set defaults
 		if (!langFile.exists()) {
 			FastCraft.get().saveResource("language.yml", false);

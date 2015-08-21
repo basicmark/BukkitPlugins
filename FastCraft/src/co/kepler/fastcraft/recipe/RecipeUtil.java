@@ -32,8 +32,6 @@ public abstract class RecipeUtil {
 			instance = (RecipeUtil) c.newInstance();
 		} catch (Exception e) {
 			FastCraft.info("Not compatible with this version of Minecraft! (" + version + ")");
-			FastCraft.info("Disabling FastCraft...");
-			Bukkit.getPluginManager().disablePlugin(FastCraft.get());
 			return null;
 		}
 		instance.loadRecipes();

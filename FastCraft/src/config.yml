@@ -25,8 +25,7 @@
 # debug:
 #   showRecipeHashes: If true, recipe hashcodes will be shown under the ingredients.
 # 
-# language: The language file to use. Can be any of the built in language files,
-#           or any language file in the languages folder in the FastCraft directory.
+# language: The language to use (EN, ES, FR, or DE).
 
 fastCraftDefaultEnabled: true
 removeItemsInCreative: false
