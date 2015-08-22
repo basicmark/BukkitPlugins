@@ -100,13 +100,14 @@ public class InventoryManager implements Listener {
 	}
 
 	public void tempDisable(String id) {
-		tempDisabled.put(id, tempDisabled.getOrDefault(id, 0) + 1);
+		Integer prev = tempDisabled.get(id);
+		tempDisabled.put(id, prev == null ? 1 : ++prev);
 	}
 
 	private boolean checkIfTempDisabled(Player p) {
 		String id = FastCraft.configs().players.getID(p);
-		int val = tempDisabled.getOrDefault(id, 0);
-		if (val <= 1) {
+		Integer val = tempDisabled.get(id);
+		if (val == null || val <= 1) {
 			tempDisabled.remove(id);
 			return val == 1;
 		} else {

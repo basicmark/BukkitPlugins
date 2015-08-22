@@ -97,7 +97,7 @@ public class PluginUpdater {
 	}
 
 	/**
-	 * Check whether a new version is available.
+	 * Check if there is a new version that hasn't been downloaded yet.
 	 * @return
 	 */
 	public boolean isUpdateAvailable() {
