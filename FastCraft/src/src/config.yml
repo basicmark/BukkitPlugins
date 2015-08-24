@@ -1,0 +1,60 @@
+# fastCraftDefaultEnabled: FastCraft is toggled on by default if true.
+# 
+# removeItemsInCreative: Whether or not ingredients will be removed from
+#                        a player's inventory while in creative mode.
+# 
+# interfaceItems: Item ID's used to represent buttons in the interface.
+# 
+# recipes:
+#   disabledIngredients: Disable recipes with any of these ingredients.
+#   disabledResults: Disable recipes with any of these results.
+#   disabledRecipeHashes: Disable specific recipes using their recipe hash.
+#   enabledRecipeHashes: Allow another recipe to show up while using FastCraft.
+# 
+# commandCompatibility: Commands that open crafting grids will conflict with
+#                       FastCraft. List any conflicting commands here.
+# 
+# autoUpdate:
+#   enabled: Whether FastCraft should check for updates.
+#   devBuilds: Whether beta versions of FastCraft should be downloaded.
+#   autoDownload: If true, new updates will be downloaded automatically.
+#   restartAfterUpdate: Restart the server after an update is downloaded.
+#   checkInterval: How often to check for updates (in minutes).
+#   showConsoleMessages: Shows update check messages in console.
+# 
+# debug:
+#   showRecipeHashes: If true, recipe hashcodes will be shown under the ingredients.
+# 
+# language: The language to use (EN, ES, FR, or DE).
+
+fastCraftDefaultEnabled: true
+removeItemsInCreative: false
+interfaceItems:
+  prevPage: '262:0'
+  nextPage: '262:0'
+  help: '387:0'
+  craft: '58:0'
+  refresh: '399:0'
+recipes:
+  disabledIngredients: []
+  disabledResults: []
+  disabledHashes: []
+commandCompatibility:
+- /recipe
+- /erecipe
+- /formula
+- /eformula
+- /method
+- /emethod
+- /recipes
+- /erecipes
+- /furniture recipe
+autoUpdate:
+  enabled: true
+  devBuilds: false
+  autoDownload: true
+  checkInterval: 30
+  showConsoleMessages: true
+debug:
+  showRecipeHashes: false
+language: EN
