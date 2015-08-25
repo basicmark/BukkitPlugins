@@ -10,6 +10,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import co.kepler.fastcraft.FastCraft;
+import co.kepler.fastcraft.Util;
 import co.kepler.fastcraft.config.PermissionsConfig.FcPerm;
 
 /**
@@ -27,22 +28,21 @@ public class LanguageConfig {
 		langFile = new File(FastCraft.get().getDataFolder(), "language.yml");
 	}
 
-	@SuppressWarnings("deprecation")
 	public void load(String lang) throws IOException, InvalidConfigurationException {
 		// Load default language entries from resources
 		String resource = "languages/" + lang.toUpperCase() + ".yml";
 		InputStream stream = FastCraft.get().getResource(resource);
-		defaults.load(stream);
-		if (stream == null) {
+		if (stream != null) {
+			Util.loadYaml(config, stream);
+		} else {
 			FastCraft.info("Invalid language: " + lang.toUpperCase());
 		}
-		
 		
 		// Load language config file, and set defaults
 		if (!langFile.exists()) {
 			FastCraft.get().saveResource("language.yml", false);
 		}
-		config.load(langFile);
+		Util.loadYaml(config, langFile);
 		config.setDefaults(defaults);
 	}
 

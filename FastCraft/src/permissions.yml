@@ -3,6 +3,7 @@
 # on the server. Using Vault instead is recommended.
 # 
 # fastcraft.use - Access to the FastCraft interface for crafting
+# fastcraft.craft - Allow to open crafting inventory with "/fastcraft craft"
 # fastcraft.toggle - Allow to toggle FastCraft with "/fastcraft toggle"
 # fastcraft.toggle.other - Allow to toggle FastCraft for other players with "/fastcraft toggle"
 # fastcraft.admin.reload - Allow to reload FastCraft configs with "/fastcraft admin reload"
@@ -14,6 +15,7 @@
 
 op:
 - fastcraft.use
+- fastcraft.craft
 - fastcraft.toggle
 - fastcraft.toggle.other
 - fastcraft.admin.reload

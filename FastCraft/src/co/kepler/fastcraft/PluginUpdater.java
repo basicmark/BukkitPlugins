@@ -7,10 +7,10 @@ import org.bukkit.command.CommandSender;
 
 import co.kepler.fastcraft.config.LanguageConfig;
 import co.kepler.fastcraft.config.PluginConfig;
-import net.gravitydevelopment.updater.Updater;
-import net.gravitydevelopment.updater.Updater.ReleaseType;
-import net.gravitydevelopment.updater.Updater.UpdateCallback;
-import net.gravitydevelopment.updater.Updater.UpdateType;
+import co.kepler.fastcraft.libraries.Updater;
+import co.kepler.fastcraft.libraries.Updater.ReleaseType;
+import co.kepler.fastcraft.libraries.Updater.UpdateCallback;
+import co.kepler.fastcraft.libraries.Updater.UpdateType;
 
 /**
  * Handles update checks and downloads.

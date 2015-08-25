@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.material.MaterialData;
 
 import co.kepler.fastcraft.FastCraft;
+import co.kepler.fastcraft.Util;
 
 /**
  * Manages the config file items.yml.
@@ -29,7 +30,7 @@ public class ItemsConfig {
 		if (!configFile.exists()) {
 			FastCraft.get().saveResource("items.yml", false);
 		}
-		config.load(configFile);
+		Util.loadYaml(config, configFile);
 	}
 
 	@SuppressWarnings("deprecation")

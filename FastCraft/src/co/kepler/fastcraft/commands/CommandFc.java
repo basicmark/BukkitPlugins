@@ -11,9 +11,10 @@ import org.bukkit.command.CommandSender;
  * @author Kepler_
  */
 public class CommandFc extends SubCommand {
-	private static final List<String> ADMIN_TOGGLE = list("admin", "toggle");
+	private static final List<String> ADMIN_TOGGLE = list("admin", "craft", "toggle");
 	
 	private final SubCommand admin = new CommandFcAdmin();
+	private final SubCommand craft = new CommandFcCraft();
 	private final SubCommand toggle = new CommandFcToggle();
 	
 	@Override
@@ -24,6 +25,9 @@ public class CommandFc extends SubCommand {
 		} else if (args[0].equalsIgnoreCase("admin")) {
 			// fastcraft admin ...
 			return admin.onCommand(sender, command, label, args);
+		} else if (args[0].equalsIgnoreCase("craft")) {
+			// fastcraft craft ...
+			return craft.onCommand(sender, command, label, args);
 		} else if (args[0].equalsIgnoreCase("toggle")) {
 			// fastcraft toggle ...
 			return toggle.onCommand(sender, command, label, args);
@@ -40,6 +44,8 @@ public class CommandFc extends SubCommand {
 			result = getMatches(args[0], ADMIN_TOGGLE);
 		} else if (args[0].equalsIgnoreCase("admin")) {
 			result = admin.onTabComplete(sender, command, label, args);
+		} else if (args[0].equalsIgnoreCase("craft")) {
+			result = craft.onTabComplete(sender, command, label, args);
 		} else if (args[0].equalsIgnoreCase("toggle")) {
 			result = toggle.onTabComplete(sender, command, label, args);
 		}

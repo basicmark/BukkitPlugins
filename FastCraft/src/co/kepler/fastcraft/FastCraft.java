@@ -36,14 +36,13 @@ public class FastCraft extends JavaPlugin {
 		configManager = new ConfigManager();
 		configManager.loadConfigs();
 
-		pluginUpdater = new PluginUpdater(getFile());
-
 		Bukkit.getPluginCommand("fastcraft").setExecutor(new CommandFc());
 
 		inventoryManager = new InventoryManager();
 		
 		MetricsStarter.start(this);
 
+		pluginUpdater = new PluginUpdater(getFile());
 		if (RecipeUtil.setup() == null) {
 			return;
 		}

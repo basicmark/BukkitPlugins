@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import co.kepler.fastcraft.FastCraft;
+import co.kepler.fastcraft.Util;
 
 /**
  * Manages FastCraft's player preferences.
@@ -20,21 +21,21 @@ import co.kepler.fastcraft.FastCraft;
 public class PlayersConfig {
 	private final String fastCraftEnabled = "fastCraftEnabled";
 	
-	private final File configFile;
+	private final File playersFile;
 	private final YamlConfiguration config;
 	
 	public PlayersConfig() {
-		configFile = new File(FastCraft.get().getDataFolder(), "players.yml");
+		playersFile = new File(FastCraft.get().getDataFolder(), "players.yml");
 		config = new YamlConfiguration();
 	}
 	
 	public void load() throws FileNotFoundException, IOException, InvalidConfigurationException {
-		configFile.createNewFile();
-		config.load(configFile);
+		playersFile.createNewFile();
+		Util.loadYaml(config, playersFile);
 	}
 	
 	public void save() throws IOException {
-		config.save(configFile);
+		config.save(playersFile);
 	}
 	
 	Boolean canUseUUID = null;

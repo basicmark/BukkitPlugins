@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import co.kepler.fastcraft.FastCraft;
+import co.kepler.fastcraft.Util;
 import net.milkbowl.vault.permission.Permission;
 
 /**
@@ -19,6 +20,7 @@ import net.milkbowl.vault.permission.Permission;
 public class PermissionsConfig {
 	public enum FcPerm {
 		USE("fastcraft.use"),
+		CRAFT("fastcraft.craft"),
 		TOGGLE("fastcraft.toggle"),
 		TOGGLE_OTHER("fastcraft.toggle.other"),
 		ADMIN_RELOAD("fastcraft.admin.reload"),
@@ -65,13 +67,13 @@ public class PermissionsConfig {
 			if (!permsFile.exists()) {
 				FastCraft.get().saveResource(FILENAME, false);
 			}
-			config.load(permsFile);
+			Util.loadYaml(config, permsFile);
 			if (!config.options().header().equals(header)) {
 				config.options().header(header);
 				config.save(permsFile);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			FastCraft.error(e);
 		}
 	}
 

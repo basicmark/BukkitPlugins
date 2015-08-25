@@ -3,11 +3,11 @@ package co.kepler.fastcraft;
 import java.io.IOException;
 
 import org.bukkit.plugin.Plugin;
-import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
-import org.mcstats.Metrics.Plotter;
 
 import co.kepler.fastcraft.config.PluginConfig;
+import co.kepler.fastcraft.libraries.Metrics;
+import co.kepler.fastcraft.libraries.Metrics.Graph;
+import co.kepler.fastcraft.libraries.Metrics.Plotter;
 
 /**
  * Starts up Plugin Metrics, and registers/plots graphs.

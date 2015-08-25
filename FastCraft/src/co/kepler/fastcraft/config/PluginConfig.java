@@ -1,6 +1,7 @@
 package co.kepler.fastcraft.config;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 import co.kepler.fastcraft.FastCraft;
+import co.kepler.fastcraft.Util;
 
 /**
  * Manages config.yml
@@ -52,8 +54,8 @@ public class PluginConfig {
 		commandCompatibility = null;
 		disabledHashes = null;
 		try {
-			config.load(configFile);
-		} catch (Exception e) {
+			Util.loadYaml(config, configFile);
+		} catch (FileNotFoundException e) {
 			FastCraft.error(e);
 		}
 	}

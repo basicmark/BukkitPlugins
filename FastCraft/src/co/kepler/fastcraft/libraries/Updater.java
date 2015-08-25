@@ -1,4 +1,4 @@
-package net.gravitydevelopment.updater;
+package co.kepler.fastcraft.libraries;
 
 import java.io.*;
 import java.net.MalformedURLException;

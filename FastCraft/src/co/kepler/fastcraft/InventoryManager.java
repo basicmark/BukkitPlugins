@@ -107,7 +107,9 @@ public class InventoryManager implements Listener {
 	private boolean checkIfTempDisabled(Player p) {
 		String id = FastCraft.configs().players.getID(p);
 		Integer val = tempDisabled.get(id);
-		if (val == null || val <= 1) {
+		if (val == null) {
+			return false;
+		} if (val <= 1) {
 			tempDisabled.remove(id);
 			return val == 1;
 		} else {
