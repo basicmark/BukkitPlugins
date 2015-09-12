@@ -14,10 +14,12 @@ import co.kepler.fastcraft.FastCraft;
 public class Ingredient {
 	private MaterialData material;
 	private int amount;
+	private boolean hasLore;
 
 	public Ingredient(MaterialData material, int amount) {
 		this.material = material;
 		this.amount = amount;
+		this.hasLore = false;
 	}
 
 	public Ingredient(MaterialData material) {
@@ -26,10 +28,16 @@ public class Ingredient {
 
 	public Ingredient(ItemStack item, int amount) {
 		this(item.getData(), amount);
+		if (item.hasItemMeta()) {
+			hasLore = item.getItemMeta().hasLore();
+		}
 	}
 
 	public Ingredient(ItemStack item) {
 		this(item.getData(), 1);
+		if (item.hasItemMeta()) {
+			hasLore = item.getItemMeta().hasLore();
+		}
 	}
 
 	public Ingredient(Ingredient ingredient, int amount) {
@@ -68,6 +76,9 @@ public class Ingredient {
 
 	@SuppressWarnings("deprecation")
 	public boolean isSimilar(Ingredient i) {
+		if (hasLore) {
+			return false;
+		}
 		if (material.getItemType() != i.material.getItemType()) {
 			return false;
 		}

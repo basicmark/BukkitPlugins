@@ -68,7 +68,13 @@ public class IngredientList {
 	public void add(ItemStack... i) {
 		for (ItemStack is : i) {
 			if (is != null) {
-				add(new Ingredient(is, is.getAmount()));
+				boolean skip = false;
+				if (is.hasItemMeta()) {
+					skip = is.getItemMeta().hasLore();
+				}
+				if (!skip) {
+					add(new Ingredient(is, is.getAmount()));
+				}
 			}
 		}
 	}
